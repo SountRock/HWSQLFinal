@@ -1,0 +1,60 @@
+USE less_02;
+
+DELIMITER $$
+	CREATE FUNCTION CONVERT_TO_DAYS(secnond DOUBLE)
+    RETURNS VARCHAR(100) 
+	DETERMINISTIC
+    BEGIN
+		DECLARE CONVERT_TEMP VARCHAR(12);
+		DECLARE DAYS DOUBLE DEFAULT 0.0;
+		DECLARE HOURS DOUBLE DEFAULT 0.0;
+		DECLARE MINUTES DOUBLE DEFAULT 0.0;
+		DECLARE SECONDS DOUBLE DEFAULT 0.0;
+    
+		SET DAYS = secnond / 86400;
+		SET HOURS = secnond / 3600 % 24;
+		SET MINUTES = secnond / 60 % 60;
+		SET SECONDS = secnond % 60;
+    
+		RETURN CONCAT(
+                    CAST(FLOOR(DAYS) AS CHAR), ' days ',
+                    CAST(FLOOR(HOURS) AS CHAR), ' hours ',
+                    CAST(FLOOR(MINUTES) AS CHAR), ' minutes ',
+                    CAST(FLOOR(SECONDS) AS CHAR), ' seconds ');
+	END $$
+DELIMITER ;
+
+SELECT CONVERT_TO_DAYS(123456);
+
+/*
+DELIMITER $$
+	CREATE FUNCTION EVEN_NUMBERS(size INT)
+    RETURNS VARCHAR(100) 
+	DETERMINISTIC
+    BEGIN
+		DECLARE count INT DEFAULT 2;
+		DECLARE result VARCHAR(100) DEFAULT '';
+		WHILE count <= size DO
+			SET result = CONCAT(result, ' ', CAST(count AS CHAR), ';');
+			SET count = count + 2;
+		END WHILE;
+        
+		RETURN result;
+	END $$
+DELIMITER ;
+*/
+
+DELIMITER $$
+CREATE PROCEDURE EVEN_NUMBERS_PROC()
+	BEGIN
+		DECLARE count INT DEFAULT 2;
+		DECLARE result VARCHAR(100) DEFAULT '';
+		WHILE count <= 10 DO
+			SET result = CONCAT(result, ' ', CAST(count AS CHAR), ';');
+			SET count = count + 2;
+		END WHILE;
+		SELECT result;
+	END $$
+DELIMITER ;
+
+CALL EVEN_NUMBERS_PROC();
